@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 
-const MovieListSchema = {
+const MovieListSchema = new mongoose.Schema(
+    {
     title: {
         type: String,
         require: [true, "Movie title is required!"],
@@ -27,7 +28,9 @@ const MovieListSchema = {
         type: String,
         require: [false],
     },
-};
+},
+{timestamps: {createdAt: true}}
+);
 
 
 module.exports = mongoose.model("Movies", MovieListSchema);
