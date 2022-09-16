@@ -1,0 +1,74 @@
+import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import axios from "axios";
+
+const FormPage = () => {
+    const [title, setTitle] = useState("");
+    const [plot, setPlot] = useState("");
+    const [service, setService] = useState("");
+    const [audience, setAudience] = useState("");
+    const [notes, setNotes] = useState("");
+    const [errors, setErrors] = useState({});
+    const navigate = useNavigate();
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        axios.post("http://localhost:8000/api/movies", {
+            title,
+            plot,
+            service,
+            audience,
+            notes
+        })
+        .then((response) => {
+            console.log(response);
+            navigate("/");
+        })
+        .catch((err) => {console.log(err.response);
+            // setErrors(err.response.data.err.errors)
+        });
+    };
+    return(
+        <div className="container-fluid p-5" style={{backgroundImage:"url(/tix.jpeg)"}}>
+            <div className="d-flex justify-content-between mt-4 mx-4 p-3">
+                <Link to="/add"><button className="rounded-pill btn-primary text-light fw-bolder btn btn-outline-dark">Add New Entertainment</button></Link>
+                <h1 className="text-dark bg-light bg-opacity-25">Entertainment Table</h1>
+                <Link to="/"><button className="rounded-pill btn-primary text-light fw-bolder btn btn-outline-dark">Home Table</button></Link>
+            </div>
+            <div>
+                <p className="fs-2 fw-bolder fst-italic text-dark bg-light bg-opacity-25">Add Some Entertainment Suggestions</p>
+            </div>
+            <div className="bg-light bg-opacity-50 d-flex justify-content-center">
+                <form className="col-5" onSubmit={handleSubmit}>
+                    <div className="form-group">
+                        <label className="fs-3 fw-bolder" htmlFor="title">Title:</label>
+                        <input type="text" className="form-control" onChange={(e) => setTitle(e.target.value)} value={title} />
+                        {errors.title ? <p>{errors.title.message}</p> : null}
+                    </div>
+                    <div className="form-group">
+                        <label className="fs-3 fw-bolder" htmlFor="plot">What Is It About:</label>
+                        <input type="text" className="form-control" onChange={(e) => setPlot(e.target.value)} value={plot} />
+                        {errors.plot ? <p>{errors.plot.message}</p> : null}
+                    </div>
+                    <div className="form-group">
+                        <label className="fs-3 fw-bolder" htmlFor="service">Where Can I Watch:</label>
+                        <input type="text" className="form-control" onChange={(e) => setService(e.target.value)} value={service} />
+                        {errors.service ? <p>{errors.service.message}</p> : null}
+                    </div>
+                    <div className="form-group">
+                        <label className="fs-3 fw-bolder" htmlFor="audience">Who Is Watching:</label>
+                        <input type="text" className="form-control" onChange={(e) => setAudience(e.target.value)} value={audience} />
+                        {errors.audience ? <p>{errors.audience.message}</p> : null}
+                    </div>
+                    <div className="form-group">
+                        <label className="fs-3 fw-bolder" htmlFor="notes">What I Thought About It:</label>
+                        <input type="text" className="form-control" onChange={(e) => setNotes(e.target.value)} value={notes} />
+                        {errors.notes ? <p>{errors.notes.message}</p> : null}
+                    </div>
+                    <button type="submit" className="rounded-pill btn-success text-light fw-bolder btn btn-outline-dark mt-3">Add Entertainment</button>
+                </form>
+            </div>
+        </div>
+    );
+};
+
+export default FormPage;
